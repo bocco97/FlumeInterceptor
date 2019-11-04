@@ -12,8 +12,8 @@ import java.io.UnsupportedEncodingException;
 public class MeteoriteSerializer extends  AbstractAvroEventSerializer<Meteorite>{
     private static final Schema SCHEMA = new Schema.Parser().parse(
             new String("{\"name\": \"meteorite\",\"type\": \"record\",\"namespace\": \"it.unipi.GeoElaborator\",\"fields\": [" +
-                    "{\"name\": \"year\",\"type\": \"string\"},{\"name\": \"mass\",\"type\": \"string\"},{\"name\": \"lat\",\"type\": \"string\"},{\"name\": \"lon\",\"type\": \"string\"},{\"name\": \"recclass\",\"type\": \"string\"}," +
-                    "{\"name\": \"resolved\",\"type\": \"string\"},{\"name\": \"info\",\"type\": {\"name\": \"info\",\"type\": \"record\",\"fields\": [" +
+                    "{\"name\": \"year\",\"type\": \"long\"},{\"name\": \"mass\",\"type\": \"int\"},{\"name\": \"lat\",\"type\": \"string\"},{\"name\": \"lon\",\"type\": \"string\"},{\"name\": \"recclass\",\"type\": \"string\"}," +
+                    "{\"name\": \"resolved\",\"type\": \"boolean\"},{\"name\": \"info\",\"type\": {\"name\": \"info\",\"type\": \"record\",\"fields\": [" +
                     "{\"name\": \"Name\",\"type\": \"string\",\"default\": \"null\"},{\"name\": \"State\",\"type\": \"string\",\"default\": \"null\"},{\"name\": \"Country\",\"type\": \"string\",\"default\": \"null\"}]}}]}")
     );
 
@@ -36,14 +36,17 @@ public class MeteoriteSerializer extends  AbstractAvroEventSerializer<Meteorite>
         JSONObject job;
         try {
             job = new JSONObject(new String(event.getBody(), "ISO-8859-1"));
-            m.setYear((new String(job.get("year").toString().getBytes(),"ISO-8859-1")));
+            //m.setYear((new String(job.get("year").toString().getBytes(),"ISO-8859-1")));
+            m.setYear(job.getLong("year"));
             m.setLat((new String(job.get("lat").toString().getBytes(),"ISO-8859-1")));
             m.setLon((new String(job.get("lon").toString().getBytes(),"ISO-8859-1")));
-            m.setMass((new String(job.get("mass").toString().getBytes(),"ISO-8859-1")));
+            //m.setMass((new String(job.get("mass").toString().getBytes(),"ISO-8859-1")));
+            m.setMass(job.getInt("mass"));
             m.setRecclass(new String(job.get("recclass").toString().getBytes(),"ISO-8859-1"));
-            m.setResolved((new String(job.get("resolved").toString().getBytes(),"ISO-8859-1")));
+            m.setResolved(job.getBoolean("resolved"));
+            //m.setResolved((new String(job.get("resolved").toString().getBytes(),"ISO-8859-1")));
             AdditionalInfo ai;
-            if (m.isResolved().equals("true")){
+            if (m.isResolved()){
                 JSONObject info = job.getJSONObject("info");
                 String name ;
                 String state ;
