@@ -1,5 +1,6 @@
 package it.unipi.meteorites;
 
+
 public class Meteorite {
     private Long year;
     private Integer mass;
